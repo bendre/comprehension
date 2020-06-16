@@ -1,0 +1,4 @@
+charset: "US-ASCII"
+paragraphFileName: "paragraph.txt"
+questionFileName: "questions.txt"
+answerFileName: "answers.txt"
