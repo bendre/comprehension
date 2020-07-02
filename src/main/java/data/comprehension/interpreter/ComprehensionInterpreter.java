@@ -13,28 +13,15 @@ import java.util.stream.Collectors;
 
 public class ComprehensionInterpreter {
     private static Logger logger = LoggerFactory.getLogger(ComprehensionInterpreter.class);
-    private SentenceText sentenceText = new SentenceText();
-    private QuestionText questionText = new QuestionText();
-    private AnswerText answerText = new AnswerText();
+    ParagraphQuestionAnswer paragraphQuestionAnswer;
     private Map<Integer, Integer> questionAnswerPair = new HashMap<>();
     private Map<Integer, Integer> answerSentenceConflict = new HashMap<>();
     private Map<Integer, String> stemmedAnswerIterate = new HashMap<>();
 
-    public ComprehensionInterpreter(final List<IText> sentenceQuestionAnswersModel) {
-        sentenceQuestionAnswersModel.stream()
-                .forEach(iText -> {
-                    if (iText.getITextImplementor() instanceof SentenceText) {
-                        sentenceText = (SentenceText) iText;
-                    }
-                    if (iText.getITextImplementor() instanceof QuestionText) {
-                        questionText = (QuestionText) iText;
-                    }
-                    if (iText.getITextImplementor() instanceof AnswerText) {
-                        answerText = (AnswerText) iText;
-                    }
-                });
+    public ComprehensionInterpreter(final ParagraphQuestionAnswer paragraphQuestionAnswersModel) {
+        this.paragraphQuestionAnswer = paragraphQuestionAnswersModel;
 
-        stemmedAnswerIterate = answerText.getTokenizedStemAnswers()
+        stemmedAnswerIterate = paragraphQuestionAnswer.getAnswerText().getTokenizedStemAnswers()
                 .stream()
                 .collect(Collectors.toMap(Answer::getAnswerId, Answer::getStemmedAnswer));
 
@@ -71,14 +58,14 @@ public class ComprehensionInterpreter {
 
 
     public List<QuestionAnswerPair> matchQuestionAnswer() {
-        questionText.getTokenizedStemQuestions()
+        paragraphQuestionAnswer.getQuestionText().getTokenizedStemQuestions()
                 .stream()
                 .forEach(question -> {
                     List<String> questionWordToken = question.getTokenizedWords();
-                    Map<String, HashSet<Integer>> wordOccurrencesWithSentences = sentenceText.wordOccurrencesWithSentences(questionWordToken);
+                    Map<String, HashSet<Integer>> wordOccurrencesWithSentences = paragraphQuestionAnswer.getParagraphText().wordOccurrencesWithSentences(questionWordToken);
                     Map<Integer, Integer> questionSentenceCounts = sentenceFrequencyCount(wordOccurrencesWithSentences);
                     SentenceCount questionSentenceMatchBestMatch = sentenceBestMatch(questionSentenceCounts);
-                    Sentence bestMatchedSentence = sentenceText.getTokenizedStemSentences()
+                    Sentence bestMatchedSentence = paragraphQuestionAnswer.getParagraphText().getTokenizedStemSentences()
                             .stream()
                             .filter(sentenceId -> sentenceId.getSentenceId().equals(questionSentenceMatchBestMatch.getSentenceId()))
                             .findAny()
@@ -210,10 +197,10 @@ public class ComprehensionInterpreter {
 
     private List<QuestionAnswerPair> questionAnswerMapping() {
         try {
-            return questionText.getTokenizedStemQuestions()
+            return paragraphQuestionAnswer.getQuestionText().getTokenizedStemQuestions()
                     .stream()
                     .map(question -> {
-                        Answer answer = answerText.getTokenizedStemAnswers()
+                        Answer answer = paragraphQuestionAnswer.getAnswerText().getTokenizedStemAnswers()
                                 .stream()
                                 .filter(answerId -> questionAnswerPair.get(question.getQuestionId()).equals(answerId.getAnswerId()))
                                 .findAny()

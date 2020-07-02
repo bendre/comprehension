@@ -1,12 +1,11 @@
 package data.raw.process.input;
 
-import data.model.AnswerText;
-import data.model.IText;
-import data.model.QuestionText;
-import data.model.SentenceText;
+import data.model.*;
 import data.raw.process.interpreter.RawDataRequestInterpreter;
 import model.QuestionAnswerPair;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +17,15 @@ abstract class AbstractAnchorRawDataSet {
      * @return List<QuestionAnswerPair>
      */
 
-    protected List<QuestionAnswerPair> rawDataInterpreterHandler() {
+    protected List<QuestionAnswerPair> rawDataInterpreterHandler(String paragraphText, String questionText, String answerText, String charSet) {
         RawDataRequestInterpreter interpreterRequestHandler = new RawDataRequestInterpreter();
-        List<IText> sentenceQuestionAnswers = new ArrayList<>();
-        sentenceQuestionAnswers.add(new SentenceText());
-        sentenceQuestionAnswers.add(new QuestionText());
-        sentenceQuestionAnswers.add(new AnswerText());
-        return interpreterRequestHandler.rawDataRequestInterpreter(sentenceQuestionAnswers);
+
+        ParagraphQuestionAnswer paragraphQuestionAnswer = new ParagraphQuestionAnswer()
+                .setParagraphText(new ParagraphText(charSet, paragraphText))
+                .setQuestionText(new QuestionText(charSet, questionText))
+                .setAnswerText(new AnswerText(charSet, answerText));
+
+        return interpreterRequestHandler.rawDataRequestInterpreter(paragraphQuestionAnswer);
     }
 
     /**

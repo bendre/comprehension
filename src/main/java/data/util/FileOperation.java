@@ -42,9 +42,9 @@ public final class FileOperation {
         StringBuilder response = new StringBuilder();
         answers.stream().forEach(answer -> response.append(answer + " \n"));
         try {
-            Path outputFilePath = Paths.get("ComprehensionOutput.txt");
+            Path outputFilePath = Paths.get("ComprehensionOutput_old.txt");
             Files.write(outputFilePath, response.toString().getBytes());
-            logger.info("Output file written to location {} name ComprehensionOutput.txt", outputFilePath);
+            logger.info("Output file written to location {} name ComprehensionOutput_old.txt", outputFilePath);
         } catch (IOException e) {
             throw new IllegalArgumentException("File write exception");
         }

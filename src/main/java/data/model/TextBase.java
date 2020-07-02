@@ -11,7 +11,6 @@ import java.util.List;
 
 @Data
 abstract class TextBase {
-    private TextCategory textCategory;
     private String fullText;
 
     protected boolean validateTextCharset(String standardCharsets, String text) {

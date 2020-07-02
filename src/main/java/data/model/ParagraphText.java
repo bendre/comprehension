@@ -3,6 +3,8 @@ package data.model;
 import data.configuration.ReadConfiguration;
 import lombok.Data;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,15 +13,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
-public class SentenceText extends TextBase implements IText {
+public class ParagraphText extends TextBase {
     private List<Sentence> tokenizedStemSentences;
 
-    public SentenceText() {
+    public ParagraphText(String charsets, String textInput) {
         ReadConfiguration readConfiguration = new ReadConfiguration();
-        String text = super.readDataFromFile(readConfiguration.getSentenceQuestionAnswerFileNameProperty().getParagraphFileName());
-        super.setTextCategory(TextCategory.SENTENCE);
-        super.validateTextCharset(readConfiguration.getSentenceQuestionAnswerFileNameProperty().getCharset(), text);
-        super.setFullText(text.trim());
+        super.validateTextCharset(charsets, textInput);
+        super.setFullText(textInput.trim());
         tokenizedStemSentences = saveTokenizedAndStemLine();
     }
 
@@ -62,10 +62,5 @@ public class SentenceText extends TextBase implements IText {
         } catch (Exception e) {
             throw new IllegalStateException("Exception occurred during word match in sentence" + e.getLocalizedMessage());
         }
-    }
-
-    @Override
-    public SentenceText getITextImplementor() {
-        return this;
     }
 }

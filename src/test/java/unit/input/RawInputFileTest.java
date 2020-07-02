@@ -15,7 +15,7 @@ public class RawInputFileTest {
         try {
             RawDataSetFileImplementer rawDataSetFileImplementer = new RawDataSetFileImplementer();
             rawDataSetFileImplementer.processRawData();
-            Assert.assertEquals(true, Files.exists(Paths.get("ComprehensionOutput.txt")));
+            Assert.assertEquals(true, Files.exists(Paths.get("ComprehensionOutput_old.txt")));
         } catch (Exception e) {
             Assert.assertTrue(e instanceof IllegalArgumentException);
         }
@@ -27,7 +27,7 @@ public class RawInputFileTest {
         try {
             RawDataSetFileImplementer rawDataSetFileImplementer = new RawDataSetFileImplementer();
             rawDataSetFileImplementer.processRawData();
-            Assert.assertEquals(true, Files.exists(Paths.get("ComprehensionOutput.txt")));
+            Assert.assertEquals(true, Files.exists(Paths.get("ComprehensionOutput_old.txt")));
         } catch (Exception e) {
             Assert.assertTrue(e instanceof IllegalArgumentException);
         }
@@ -39,7 +39,7 @@ public class RawInputFileTest {
         try {
             RawDataSetFileImplementer rawDataSetFileImplementer = new RawDataSetFileImplementer();
             rawDataSetFileImplementer.processRawData();
-            Assert.assertEquals(true, Files.exists(Paths.get("ComprehensionOutput.txt")));
+            Assert.assertEquals(true, Files.exists(Paths.get("ComprehensionOutput_old.txt")));
         } catch (Exception e) {
             Assert.assertTrue(e instanceof IllegalArgumentException);
         }
